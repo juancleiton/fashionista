@@ -42,6 +42,7 @@
     "no-console": ["error", { "allow": ["tron"] }],
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
+    "react/button-has-type": "off",
     "import-helpers/order-imports": [
       "warn",
       {

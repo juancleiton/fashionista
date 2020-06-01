@@ -2,7 +2,6 @@ import styled, { css } from "styled-components";
 
 export const Container = styled.div`
   background: #f9f9f9;
-  height: 100vh;
   margin-top: 64px;
 
   ${(props) =>
@@ -28,10 +27,4 @@ export const Container = styled.div`
           }
         `
       : null}
-`;
-
-export const Content = styled.div`
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 0 24px;
 `;
