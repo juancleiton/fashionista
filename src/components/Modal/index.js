@@ -1,10 +1,13 @@
 import React, { useCallback, useState } from "react";
 import { FiArrowLeft, FiMinus, FiPlus } from "react-icons/fi";
+import { useSelector } from "react-redux";
 
 import * as S from "./styles";
 
-export default function Modal({ products, handleToggleModal, actualModal }) {
+export default function Modal({ handleToggleModal, actualModal }) {
   const [productStored, setProductStored] = useState([]);
+
+  const products = useSelector((state) => state.products.products);
 
   const handleProductsFiltered = useCallback(
     (e) => {
@@ -17,12 +20,10 @@ export default function Modal({ products, handleToggleModal, actualModal }) {
       const filteredResults = products.filter((p) => {
         const productToSearch = p.name.toUpperCase();
 
-        if (productToSearch.search(word) > -1) {
-          return p;
-        }
+        return productToSearch ? p.name.includes(word) : null;
       });
 
-      setProductStored(filteredResults);
+      return setProductStored(filteredResults);
     },
     [products]
   );

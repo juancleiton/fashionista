@@ -1,42 +1,43 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
 import { uuid } from "uuidv4";
 
 import Header from "~/components/Header";
 import Modal from "~/components/Modal";
-import api from "~/services/api";
 
 import * as S from "./styles";
 
 function Product() {
+  const products = useSelector((state) => state.products.products);
+
   const [toggleModal, setToggleModal] = useState(false);
   const [actualModal, setActualModal] = useState("");
-  const [products, setProducts] = useState([]);
-  const [sizeSelected, setSizeSelected] = useState("");
+
+  const [product, setProduct] = useState([]);
+  const [sizeSelected, setSizeSelected] = useState(null);
 
   const location = useLocation();
   const productSelected = location.state;
 
-  const handleGetProducts = useCallback(async () => {
-    const response = await api.get("/products");
-
-    const data = response.data.filter(
-      (product) =>
-        product.name === productSelected.name &&
-        product.code_color === productSelected.code_color
+  const loadProduct = useCallback(async () => {
+    const data = products.filter(
+      (item) =>
+        item.name === productSelected.name &&
+        item.code_color === productSelected.code_color
     );
 
-    setProducts(data);
-  }, [productSelected]);
+    setProduct(data);
+  }, [productSelected, products]);
+
+  useEffect(() => {
+    loadProduct();
+  }, [loadProduct]);
 
   const handleSelectSize = useCallback((size) => {
     setSizeSelected(size);
   }, []);
-
-  useEffect(() => {
-    handleGetProducts();
-  }, [handleGetProducts]);
 
   const handleToggleModal = useCallback(
     (modal) => {
@@ -47,21 +48,27 @@ function Product() {
     [toggleModal]
   );
 
+  const handleAddToCart = useCallback(() => {
+    if (!sizeSelected) return;
+
+    console.log(`Tamanho ${sizeSelected} adicionado ao carrinho`);
+  }, [sizeSelected]);
+
   return (
     <S.Container before={toggleModal}>
       <Header handleToggleModal={handleToggleModal} />
 
-      {products.map((product) => (
-        <S.List>
-          <img src={product.image} alt="" />
+      {product.map((p) => (
+        <S.List key={uuid()}>
+          <img src={p.image} alt="" />
 
           <S.Options>
-            <h1>{product.name}</h1>
+            <h1>{p.name}</h1>
 
             <p>
-              <span className="product--price">{product.actual_price}</span>{" "}
+              <span className="product--price">{p.actual_price}</span>{" "}
               <span className="product--installments">
-                em até {product.installments}
+                em até {p.installments}
               </span>
             </p>
 
@@ -69,25 +76,37 @@ function Product() {
               <p>Escolha o tamanho</p>
 
               <div>
-                {product.sizes.map(
-                  (item) =>
-                    item.available && (
-                      <button
-                        onClick={() => handleSelectSize(item.size)}
-                        className={`button--size ${
-                          item.size === sizeSelected
-                            ? "button--size-selected"
-                            : null
-                        }`}
-                        value={item.sku}
-                      >
-                        {item.size}
-                      </button>
-                    )
+                {p.sizes.map((item) =>
+                  item.available === true ? (
+                    <button
+                      key={uuid()}
+                      onClick={() => handleSelectSize(item.size)}
+                      className={`button--size ${
+                        item.size === sizeSelected
+                          ? "button--size-selected"
+                          : null
+                      } ${!item.available ? "button--size-unavailable" : null}`}
+                    >
+                      {item.size}
+                    </button>
+                  ) : (
+                    <button
+                      key={uuid()}
+                      className={`button--size ${
+                        item.size === sizeSelected
+                          ? "button--size-selected"
+                          : null
+                      } ${!item.available ? "button--size-unavailable" : null}`}
+                    >
+                      {item.size}
+                    </button>
+                  )
                 )}
               </div>
 
-              <button className="button--addToBag">Adicionar à Sacola</button>
+              <button className="button--addToBag" onClick={handleAddToCart}>
+                Adicionar à Sacola
+              </button>
             </div>
           </S.Options>
         </S.List>
@@ -95,7 +114,6 @@ function Product() {
 
       {toggleModal && (
         <Modal
-          products={products}
           handleToggleModal={handleToggleModal}
           actualModal={actualModal}
         />

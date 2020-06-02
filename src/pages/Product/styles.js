@@ -98,6 +98,19 @@ export const Options = styled.div`
       }
     }
 
+    .button--size-unavailable {
+      background: #ddd;
+      border: 1px solid #ddd;
+      color: #fff;
+      cursor: not-allowed;
+
+      &:hover {
+        background: #ddd;
+        color: #fff;
+        box-shadow: none;
+      }
+    }
+
     .button--size-selected {
       background: #212529;
       color: #fff;

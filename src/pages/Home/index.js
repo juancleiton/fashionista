@@ -1,22 +1,25 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 import Catalog from "~/components/Catalog";
 import Header from "~/components/Header";
 import Modal from "~/components/Modal";
 import api from "~/services/api";
+import { loadProducts } from "~/store/modules/products/actions";
 
 import { Container } from "./styles";
 
 function Home() {
   const [toggleModal, setToggleModal] = useState(false);
   const [actualModal, setActualModal] = useState("");
-  const [products, setProducts] = useState([]);
+
+  const dispatch = useDispatch();
 
   const handleGetProducts = useCallback(async () => {
-    const response = await api.get("/products");
+    const response = await api.get("");
 
-    setProducts(response.data);
-  }, []);
+    dispatch(loadProducts(response.data));
+  }, [dispatch]);
 
   useEffect(() => {
     handleGetProducts();
@@ -35,11 +38,10 @@ function Home() {
     <Container before={toggleModal}>
       <Header handleToggleModal={handleToggleModal} />
 
-      <Catalog products={products} />
+      <Catalog />
 
       {toggleModal && (
         <Modal
-          products={products}
           handleToggleModal={handleToggleModal}
           actualModal={actualModal}
         />

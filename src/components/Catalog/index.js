@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { uuid } from "uuidv4";
@@ -7,7 +8,9 @@ import slugfy from "~/utils/slugfy";
 
 import * as S from "./styles";
 
-function Catalog({ products }) {
+function Catalog() {
+  const products = useSelector((state) => state.products.products);
+
   return (
     <S.Catalog>
       <S.Container>
