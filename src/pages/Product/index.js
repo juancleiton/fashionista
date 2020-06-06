@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 
 import { uuid } from "uuidv4";
@@ -7,16 +7,18 @@ import { uuid } from "uuidv4";
 import Header from "~/components/Header";
 import Modal from "~/components/Modal";
 
+import { addToCart } from "../../store/modules/cart/actions";
 import * as S from "./styles";
 
 function Product() {
+  const cart = useSelector((state) => state.cart.cart);
+  const modalStatus = useSelector((state) => state.cart.modal);
   const products = useSelector((state) => state.products.products);
-
-  const [toggleModal, setToggleModal] = useState(false);
-  const [actualModal, setActualModal] = useState("");
 
   const [product, setProduct] = useState([]);
   const [sizeSelected, setSizeSelected] = useState(null);
+
+  const dispatch = useDispatch();
 
   const location = useLocation();
   const productSelected = location.state;
@@ -39,24 +41,20 @@ function Product() {
     setSizeSelected(size);
   }, []);
 
-  const handleToggleModal = useCallback(
-    (modal) => {
-      setToggleModal(!toggleModal);
+  const handleAddToCart = useCallback(
+    (item) => {
+      if (!sizeSelected) return;
 
-      setActualModal(modal);
+      const data = { ...item, size: sizeSelected };
+
+      dispatch(addToCart(data));
     },
-    [toggleModal]
+    [dispatch, sizeSelected]
   );
 
-  const handleAddToCart = useCallback(() => {
-    if (!sizeSelected) return;
-
-    console.log(`Tamanho ${sizeSelected} adicionado ao carrinho`);
-  }, [sizeSelected]);
-
   return (
-    <S.Container before={toggleModal}>
-      <Header handleToggleModal={handleToggleModal} />
+    <S.Container before={modalStatus}>
+      <Header />
 
       {product.map((p) => (
         <S.List key={uuid()}>
@@ -104,7 +102,10 @@ function Product() {
                 )}
               </div>
 
-              <button className="button--addToBag" onClick={handleAddToCart}>
+              <button
+                className="button--addToBag"
+                onClick={() => handleAddToCart(p)}
+              >
                 Adicionar à Sacola
               </button>
             </div>
@@ -112,12 +113,7 @@ function Product() {
         </S.List>
       ))}
 
-      {toggleModal && (
-        <Modal
-          handleToggleModal={handleToggleModal}
-          actualModal={actualModal}
-        />
-      )}
+      {modalStatus && <Modal />}
     </S.Container>
   );
 }

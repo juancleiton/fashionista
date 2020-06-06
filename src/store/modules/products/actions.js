@@ -1,6 +1,8 @@
-export function loadProducts(products) {
+import { LOAD_PRODUCTS } from "./types";
+
+export function loadProducts(product) {
   return {
-    type: "@cart/LOAD_PRODUCTS",
-    payload: { products },
+    type: LOAD_PRODUCTS,
+    payload: { product },
   };
 }

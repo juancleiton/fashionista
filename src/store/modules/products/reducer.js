@@ -1,17 +1,13 @@
-import { produce } from "immer";
-
 const INITIAL_STATE = {
   products: [],
 };
 
-export default function auth(state = INITIAL_STATE, action) {
+export default function product(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case "@cart/LOAD_PRODUCTS":
-      return produce(state, (draft) => {
-        const { products } = action.payload;
+    case "@products/LOAD_PRODUCTS":
+      const { product } = action.payload;
 
-        draft.products = products;
-      });
+      return { ...state, products: product };
 
     default:
       return state;

@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import Catalog from "~/components/Catalog";
 import Header from "~/components/Header";
@@ -10,8 +10,7 @@ import { loadProducts } from "~/store/modules/products/actions";
 import { Container } from "./styles";
 
 function Home() {
-  const [toggleModal, setToggleModal] = useState(false);
-  const [actualModal, setActualModal] = useState("");
+  const modalStatus = useSelector((state) => state.cart.modal);
 
   const dispatch = useDispatch();
 
@@ -25,27 +24,13 @@ function Home() {
     handleGetProducts();
   }, [handleGetProducts]);
 
-  const handleToggleModal = useCallback(
-    (modal) => {
-      setToggleModal(!toggleModal);
-
-      setActualModal(modal);
-    },
-    [toggleModal]
-  );
-
   return (
-    <Container before={toggleModal}>
-      <Header handleToggleModal={handleToggleModal} />
+    <Container before={modalStatus}>
+      <Header />
 
       <Catalog />
 
-      {toggleModal && (
-        <Modal
-          handleToggleModal={handleToggleModal}
-          actualModal={actualModal}
-        />
-      )}
+      {modalStatus && <Modal />}
     </Container>
   );
 }

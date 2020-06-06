@@ -1,13 +1,29 @@
 import React, { useCallback, useState } from "react";
 import { FiArrowLeft, FiMinus, FiPlus } from "react-icons/fi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
+import { uuid } from "uuidv4";
+
+import { removeFromCart, showModal } from "~/store/modules/cart/actions";
 
 import * as S from "./styles";
 
-export default function Modal({ handleToggleModal, actualModal }) {
+export default function Modal() {
   const [productStored, setProductStored] = useState([]);
 
+  const dispatch = useDispatch();
+
+  const cart = useSelector((state) => state.cart.cart);
+  const actualModal = useSelector((state) => state.cart.actualModal);
+
   const products = useSelector((state) => state.products.products);
+
+  const handleToggleModal = useCallback(
+    (typeModal) => {
+      dispatch(showModal(typeModal));
+    },
+    [dispatch]
+  );
 
   const handleProductsFiltered = useCallback(
     (e) => {
@@ -28,10 +44,17 @@ export default function Modal({ handleToggleModal, actualModal }) {
     [products]
   );
 
+  const handleRemoveFromCart = useCallback(
+    (product) => {
+      dispatch(removeFromCart(product));
+    },
+    [dispatch]
+  );
+
   return (
     <S.Container>
       <S.Header>
-        <button type="button" onClick={handleToggleModal}>
+        <button type="button" onClick={() => handleToggleModal()}>
           <FiArrowLeft />
         </button>
 
@@ -51,9 +74,9 @@ export default function Modal({ handleToggleModal, actualModal }) {
           </S.SeachForm>
         )}
 
-        {actualModal === "search" &&
+        {actualModal === "search" && cart.length >= 1 ? (
           productStored.map((product) => (
-            <S.Item key={product.code_color}>
+            <S.Item key={uuid()}>
               <S.Row>
                 {product.image ? (
                   <img src={product.image} alt={product.name} />
@@ -74,25 +97,28 @@ export default function Modal({ handleToggleModal, actualModal }) {
                 </div>
               </S.Row>
             </S.Item>
-          ))}
+          ))
+        ) : (
+          <h1>poxa</h1>
+        )}
 
-        {actualModal === "bag" &&
-          productStored.map((product) => (
-            <S.Item key={product.code_color}>
+        {actualModal === "bag" && cart.length >= 1 ? (
+          cart.map((product) => (
+            <S.Item key={uuid()}>
               <S.Row>
                 <img src={product.image} alt={product.name} />
 
                 <div className="product__list__info">
                   <p className="title">{product.name}</p>
 
-                  <p className="size">Tam.: G</p>
+                  <p className="size">Tam.: {product.size}</p>
 
                   <div className="quantity">
                     <button>
                       <FiMinus />
                     </button>
 
-                    <p>99</p>
+                    <p>{product.amount}</p>
 
                     <button>
                       <FiPlus />
@@ -106,9 +132,14 @@ export default function Modal({ handleToggleModal, actualModal }) {
                 </div>
               </S.Row>
 
-              <S.Remove>Remover Item</S.Remove>
+              <S.Remove onClick={() => handleRemoveFromCart(product)}>
+                Remover Item
+              </S.Remove>
             </S.Item>
-          ))}
+          ))
+        ) : (
+          <h1>poxa</h1>
+        )}
       </S.Content>
     </S.Container>
   );
