@@ -11,7 +11,6 @@ import { addToCart } from "../../store/modules/cart/actions";
 import * as S from "./styles";
 
 function Product() {
-  const cart = useSelector((state) => state.cart.cart);
   const modalStatus = useSelector((state) => state.cart.modal);
   const products = useSelector((state) => state.products.products);
 

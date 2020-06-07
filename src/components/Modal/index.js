@@ -4,8 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { uuid } from "uuidv4";
 
-import { removeFromCart, showModal } from "~/store/modules/cart/actions";
+import {
+  removeFromCart,
+  showModal,
+  updateAmount,
+} from "~/store/modules/cart/actions";
 
+import { formatPrice } from "../../utils/format";
 import * as S from "./styles";
 
 export default function Modal() {
@@ -13,7 +18,21 @@ export default function Modal() {
 
   const dispatch = useDispatch();
 
-  const cart = useSelector((state) => state.cart.cart);
+  const cart = useSelector((state) =>
+    state.cart.cart.map((product) => ({
+      ...product,
+      subtotal:
+        product.actual_price.replace("R$", "").replace(",", ".") *
+        product.amount,
+    }))
+  );
+
+  const total = cart.reduce((accumulator, currentValue) => {
+    const result = accumulator + currentValue.subtotal;
+
+    return result;
+  }, 0);
+
   const actualModal = useSelector((state) => state.cart.actualModal);
 
   const products = useSelector((state) => state.products.products);
@@ -51,6 +70,20 @@ export default function Modal() {
     [dispatch]
   );
 
+  const handleDecrementProduct = useCallback(
+    (product) => {
+      dispatch(updateAmount(product, product.amount - 1));
+    },
+    [dispatch]
+  );
+
+  const handleIncrementProduct = useCallback(
+    (product) => {
+      dispatch(updateAmount(product, product.amount + 1));
+    },
+    [dispatch]
+  );
+
   return (
     <S.Container>
       <S.Header>
@@ -73,8 +106,8 @@ export default function Modal() {
             />
           </S.SeachForm>
         )}
-
-        {actualModal === "search" && cart.length >= 1 ? (
+        {actualModal === "search" &&
+          productStored.length >= 1 &&
           productStored.map((product) => (
             <S.Item key={uuid()}>
               <S.Row>
@@ -97,12 +130,14 @@ export default function Modal() {
                 </div>
               </S.Row>
             </S.Item>
-          ))
-        ) : (
-          <h1>poxa</h1>
+          ))}
+
+        {actualModal === "search" && productStored.length <= 0 && (
+          <h1>Procure um produto</h1>
         )}
 
-        {actualModal === "bag" && cart.length >= 1 ? (
+        {actualModal === "bag" &&
+          cart.length >= 1 &&
           cart.map((product) => (
             <S.Item key={uuid()}>
               <S.Row>
@@ -114,13 +149,13 @@ export default function Modal() {
                   <p className="size">Tam.: {product.size}</p>
 
                   <div className="quantity">
-                    <button>
+                    <button onClick={() => handleDecrementProduct(product)}>
                       <FiMinus />
                     </button>
 
                     <p>{product.amount}</p>
 
-                    <button>
+                    <button onClick={() => handleIncrementProduct(product)}>
                       <FiPlus />
                     </button>
                   </div>
@@ -129,16 +164,21 @@ export default function Modal() {
                 <div className="product__list__prices">
                   <p className="current">{product.actual_price}</p>
                   <p className="installments">{product.installments}</p>
+                  Subtotal: {formatPrice(product.subtotal)}
                 </div>
               </S.Row>
-
               <S.Remove onClick={() => handleRemoveFromCart(product)}>
                 Remover Item
               </S.Remove>
             </S.Item>
-          ))
-        ) : (
-          <h1>poxa</h1>
+          ))}
+
+        {actualModal === "bag" && cart.length >= 1 && (
+          <div>Total: {formatPrice(total)}</div>
+        )}
+
+        {actualModal === "bag" && cart.length <= 0 && (
+          <h1>Nao tem nada no carrinho</h1>
         )}
       </S.Content>
     </S.Container>

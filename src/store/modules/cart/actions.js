@@ -1,4 +1,9 @@
-import { ADD_TO_CART, REMOVE_FROM_CART, SHOW_MODAL } from "./types";
+import {
+  ADD_TO_CART,
+  REMOVE_FROM_CART,
+  SHOW_MODAL,
+  UPDATE_AMOUNT,
+} from "./types";
 
 export function showModal(typeModal) {
   return {
@@ -18,5 +23,12 @@ export function removeFromCart(data) {
   return {
     type: REMOVE_FROM_CART,
     payload: { data },
+  };
+}
+
+export function updateAmount(data, amount) {
+  return {
+    type: UPDATE_AMOUNT,
+    payload: { data, amount },
   };
 }

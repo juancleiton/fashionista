@@ -11,6 +11,10 @@ import * as S from "./styles";
 export default function Header() {
   const cart = useSelector((state) => state.cart.cart);
 
+  const productsQuantity = cart.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue.amount;
+  }, 0);
+
   const dispatch = useDispatch();
 
   const handleToggleModal = useCallback(
@@ -35,7 +39,7 @@ export default function Header() {
           <button type="button" onClick={() => handleToggleModal("bag")}>
             <FiShoppingBag />
 
-            <div className="badge">{cart ? cart.length : "0"}</div>
+            <div className="badge">{productsQuantity}</div>
           </button>
         </div>
       </header>

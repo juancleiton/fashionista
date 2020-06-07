@@ -4,6 +4,7 @@ const INITIAL_STATE = {
   cart: [],
   modal: false,
   actualModal: "",
+  total: 0,
 };
 
 export default function cart(state = INITIAL_STATE, action) {
@@ -12,42 +13,83 @@ export default function cart(state = INITIAL_STATE, action) {
       case "@cart/ADD_TO_CART": {
         const { data } = action.payload;
 
-        draft.cart = [...draft.cart, data];
-        break;
-      }
+        const productExists = state.cart.find(
+          (p) =>
+            p.size === data.size &&
+            p.sizes.sku === data.sizes.sku &&
+            p.code_color === data.code_color
+        );
 
-      case "@cart/REMOVE": {
-        const productIndex = draft.cart.findIndex((p) => p.id === action.id);
+        const currentAmount = productExists ? productExists.amount : 0;
 
-        if (productIndex >= 0) {
-          draft.splice(productIndex, 1);
-        }
+        const amount = currentAmount + 1;
 
-        break;
-      }
+        if (productExists) {
+          const productIndex = draft.cart.findIndex(
+            (p) => p.size === data.size
+          );
 
-      case "@cart/UPDATE_AMOUNT_SUCCESS": {
-        const productIndex = draft.findIndex((p) => p.id === action.id);
+          if (productIndex >= 0) {
+            draft.cart[productIndex].amount = Number(amount);
+          }
 
-        if (productIndex >= 0) {
-          draft[productIndex].amount = Number(action.amount);
+          console.tron.log(draft.cart);
+        } else {
+          draft.cart = [
+            ...draft.cart,
+            {
+              ...data,
+              amount: 1,
+            },
+          ];
+
+          console.tron.log(draft.cart);
         }
 
         break;
       }
 
       case "@cart/REMOVE_FROM_CART": {
-        console.log("@cart/REMOVE_FROM_CART");
+        const { data } = action.payload;
+
+        const productIndex = draft.cart.findIndex(
+          (p) =>
+            p.size === data.size &&
+            p.sizes.sku === data.sizes.sku &&
+            p.code_color === data.code_color
+        );
+
+        if (productIndex >= 0) {
+          draft.cart.splice(productIndex, 1);
+        }
 
         break;
       }
 
-      case "SHOW_MODAL": {
+      case "@cart/UPDATE_AMOUNT": {
+        const { data, amount } = action.payload;
+
+        const productIndex = draft.cart.findIndex(
+          (p) =>
+            p.size === data.size &&
+            p.sizes.sku === data.sizes.sku &&
+            p.code_color === data.code_color
+        );
+
+        if (productIndex >= 0 && amount >= 1) {
+          draft.cart[productIndex].amount = amount;
+        }
+
+        break;
+      }
+
+      case "@cart/SHOW_MODAL": {
         const { typeModal } = action.payload;
 
         draft.modal = !draft.modal;
         draft.actualModal = typeModal;
-        console.log("show");
+
+        break;
       }
 
       default:
