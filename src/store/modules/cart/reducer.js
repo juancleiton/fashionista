@@ -42,8 +42,6 @@ export default function cart(state = INITIAL_STATE, action) {
               amount: 1,
             },
           ];
-
-          console.tron.log(draft.cart);
         }
 
         break;
