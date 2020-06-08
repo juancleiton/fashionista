@@ -1,3 +1,4 @@
+import { darken } from "polished";
 import styled from "styled-components";
 
 export const Content = styled.div`
@@ -6,7 +7,7 @@ export const Content = styled.div`
   background: #f9f9f9;
 
   overflow: visible;
-  margin-bottom: 64px;
+  margin-bottom: 128px;
 `;
 
 export const Item = styled.div`
@@ -96,19 +97,42 @@ export const CartEmpty = styled.div`
   margin-top: 64px;
 `;
 
-export const Total = styled.div`
+export const Footer = styled.div`
   display: flex;
-  align-items: center;
-
-  background: #212529;
-  color: #fff;
-  font-weight: bold;
-  font-size: 28px;
-
+  flex-direction: column;
   bottom: 0;
-
   width: 100%;
-  height: 64px;
-  padding: 0 24px;
   position: fixed;
+  color: #fff;
+
+  .footer {
+    display: flex;
+    align-items: center;
+
+    height: 64px;
+    padding: 0 24px;
+
+    font-weight: bold;
+  }
+
+  div {
+    background: #212529;
+    height: 32px;
+
+    font-size: 20px;
+  }
+
+  button {
+    color: #fff;
+    border: 0;
+
+    font-size: 28px;
+    background: #34cb79;
+
+    transition: background 0.2s ease-in-out;
+
+    &:hover {
+      background: ${darken(0.1, "#34cb79")};
+    }
+  }
 `;

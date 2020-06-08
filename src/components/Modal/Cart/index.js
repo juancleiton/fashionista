@@ -96,7 +96,11 @@ export default function Cart() {
         </S.CartEmpty>
       )}
 
-      <S.Total>Total: {formatPrice(total)}</S.Total>
+      <S.Footer>
+        <div className="footer total">Total: {formatPrice(total)}</div>
+
+        <button className="footer checkout">Finalizar compra</button>
+      </S.Footer>
     </>
   );
 }
