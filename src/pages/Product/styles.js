@@ -116,7 +116,7 @@ export const Options = styled.div`
       color: #fff;
     }
 
-    .button--addToBag {
+    .button--addToCart {
       width: 100%;
       margin-top: 16px;
       background: #212529;

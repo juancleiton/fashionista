@@ -26,14 +26,15 @@ export default function cart(state = INITIAL_STATE, action) {
 
         if (productExists) {
           const productIndex = draft.cart.findIndex(
-            (p) => p.size === data.size
+            (p) =>
+              p.size === data.size &&
+              p.sizes.sku === data.sizes.sku &&
+              p.code_color === data.code_color
           );
 
           if (productIndex >= 0) {
             draft.cart[productIndex].amount = Number(amount);
           }
-
-          console.tron.log(draft.cart);
         } else {
           draft.cart = [
             ...draft.cart,

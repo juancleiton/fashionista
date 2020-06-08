@@ -36,7 +36,7 @@ export default function Header() {
             <FiSearch />
           </button>
 
-          <button type="button" onClick={() => handleToggleModal("bag")}>
+          <button type="button" onClick={() => handleToggleModal("cart")}>
             <FiShoppingBag />
 
             <div className="badge">{productsQuantity}</div>

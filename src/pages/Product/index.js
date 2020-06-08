@@ -102,7 +102,7 @@ function Product() {
               </div>
 
               <button
-                className="button--addToBag"
+                className="button--addToCart"
                 onClick={() => handleAddToCart(p)}
               >
                 Adicionar à Sacola
