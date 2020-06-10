@@ -17,7 +17,7 @@
 
 ## 🔖 Sobre
 
-O projeto **Fashionista** é o projeto prático proposto pelo curso de React online da Codenation
+O projeto **Fashionista** é o projeto prático proposto pelo curso de React online da [Codenation](https://github.com/codenation-dev)
 
 ---
 
