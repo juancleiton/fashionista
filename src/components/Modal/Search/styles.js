@@ -1,4 +1,14 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const zoomSearch = keyframes`
+  0% {
+		transform: scale(0.8) rotate(20deg);
+	}
+
+	100% {
+		transform: scale(1);
+	}
+`;
 
 export const Content = styled.div`
   display: flex;
@@ -89,4 +99,13 @@ export const SearchEmpty = styled.div`
   text-align: center;
   padding: 0 24px;
   margin-top: 64px;
+  transform: scale(1);
+
+  svg {
+    margin-top: 16px;
+    width: 50px;
+    height: 50px;
+
+    animation: ${zoomSearch} 1s alternate infinite ease-in;
+  }
 `;

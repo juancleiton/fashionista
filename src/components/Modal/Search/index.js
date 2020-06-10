@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import { FiSearch } from "react-icons/fi";
 import { useSelector } from "react-redux";
 
 import { uuid } from "uuidv4";
@@ -69,6 +70,8 @@ export default function Search() {
       {productStored.length <= 0 && (
         <S.SearchEmpty>
           <h1>Procure um produto</h1>
+
+          <FiSearch />
         </S.SearchEmpty>
       )}
     </>

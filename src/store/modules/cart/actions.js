@@ -3,6 +3,7 @@ import {
   REMOVE_FROM_CART,
   SHOW_MODAL,
   UPDATE_AMOUNT,
+  CHECKOUT,
 } from "./types";
 
 export function showModal(typeModal) {
@@ -30,5 +31,11 @@ export function updateAmount(data, amount) {
   return {
     type: UPDATE_AMOUNT,
     payload: { data, amount },
+  };
+}
+
+export function checkoutCart() {
+  return {
+    type: CHECKOUT,
   };
 }

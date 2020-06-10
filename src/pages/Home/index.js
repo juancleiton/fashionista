@@ -25,7 +25,7 @@ function Home() {
   }, [handleGetProducts]);
 
   return (
-    <Container before={modalStatus}>
+    <Container before={modalStatus} data-testid="home">
       <Header />
 
       <Catalog />

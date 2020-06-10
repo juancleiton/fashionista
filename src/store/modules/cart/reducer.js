@@ -1,5 +1,7 @@
 import produce from "immer";
 
+import sortByItemName from "../../../utils/sortByItemName";
+
 const INITIAL_STATE = {
   cart: [],
   modal: false,
@@ -36,14 +38,10 @@ export default function cart(state = INITIAL_STATE, action) {
             draft.cart[productIndex].amount = Number(amount);
           }
         } else {
-          draft.cart = [
-            ...draft.cart,
-            {
-              ...data,
-              amount: 1,
-            },
-          ];
+          draft.cart = [...draft.cart, { ...data, amount: 1 }];
         }
+
+        draft.cart = sortByItemName(draft.cart);
 
         break;
       }
@@ -87,6 +85,15 @@ export default function cart(state = INITIAL_STATE, action) {
 
         draft.modal = !draft.modal;
         draft.actualModal = typeModal;
+
+        break;
+      }
+
+      case "@cart/CHECKOUT": {
+        draft.cart = [];
+        draft.modal = false;
+        draft.actualModal = "";
+        draft.total = 0;
 
         break;
       }

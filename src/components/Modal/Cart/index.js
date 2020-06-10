@@ -1,16 +1,22 @@
 import React, { useCallback } from "react";
-import { FiMinus, FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiMinus, FiPlus, FiTrash2, FiShoppingBag } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 import { uuid } from "uuidv4";
 
-import { removeFromCart, updateAmount } from "~/store/modules/cart/actions";
+import {
+  removeFromCart,
+  updateAmount,
+  checkoutCart,
+} from "~/store/modules/cart/actions";
 
 import { formatPrice } from "../../../utils/format";
 import * as S from "./styles";
 
 export default function Cart() {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const cart = useSelector((state) =>
     state.cart.cart.map((product) => ({
@@ -47,6 +53,14 @@ export default function Cart() {
     },
     [dispatch]
   );
+
+  const checkout = useCallback(() => {
+    if (cart.length <= 0) return;
+
+    dispatch(checkoutCart());
+
+    history.push("/checkout");
+  }, [dispatch, history, cart]);
 
   return (
     <>
@@ -92,14 +106,18 @@ export default function Cart() {
 
       {cart.length <= 0 && (
         <S.CartEmpty>
-          <h1>Adicione produtos no carrinho no carrinho</h1>
+          <h1>Adicione produtos na sacola</h1>
+
+          <FiShoppingBag />
         </S.CartEmpty>
       )}
 
       <S.Footer>
         <div className="footer total">Total: {formatPrice(total)}</div>
 
-        <button className="footer checkout">Finalizar compra</button>
+        <button className="footer checkout" onClick={checkout}>
+          Finalizar compra
+        </button>
       </S.Footer>
     </>
   );

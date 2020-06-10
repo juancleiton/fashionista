@@ -1,5 +1,23 @@
 import { darken } from "polished";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const appear = keyframes`
+  10%, 90% {
+    transform: rotate(-45deg);
+  }
+
+  20%, 80% {
+    transform: rotate(45deg);
+  }
+
+  30%, 50%, 70% {
+    transform: rotate(-45deg);
+  }
+
+  40%, 60% {
+    transform: rotate(45deg);
+  }
+`;
 
 export const Content = styled.div`
   display: flex;
@@ -95,6 +113,13 @@ export const CartEmpty = styled.div`
   text-align: center;
   padding: 0 24px;
   margin-top: 64px;
+
+  svg {
+    height: 50px;
+    width: 50px;
+
+    animation: ${appear} 1s;
+  }
 `;
 
 export const Footer = styled.div`
