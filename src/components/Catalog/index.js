@@ -18,7 +18,7 @@ function Catalog() {
 
         <S.List>
           {products.map((product) => (
-            <S.Product key={uuid()}>
+            <S.Product key={uuid()} data-testid="cardProduct">
               <Link
                 to={{
                   pathname: `/produto/${slugfy(product.name)}`,

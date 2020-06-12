@@ -21,10 +21,7 @@ export const Container = styled.div`
 
     img {
       height: 64px;
-
-      @media (max-width: 425px) {
-        width: 100%;
-      }
+      width: 200px;
     }
 
     .header--buttons {

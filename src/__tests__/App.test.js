@@ -1,33 +1,16 @@
 import React from "react";
-import { Provider, useSelector } from "react-redux";
 import "@testing-library/jest-dom/extend-expect";
-import { Router } from "react-router-dom";
 
 import { render } from "@testing-library/react";
-import { createMemoryHistory } from "history";
 
-import Catalog from "~/components/Catalog";
-import Header from "~/components/Header";
-import Home from "~/pages/Home";
-import { store } from "~/store";
-
-const history = createMemoryHistory();
+import App from "~/App";
 
 describe("App", () => {
-  it("should render the <Home> component", () => {
-    const { getByTestId } = render(
-      <Router history={history}>
-        <Provider store={store}>
-          <Home>
-            <Header />
-            <Catalog />
-          </Home>
-        </Provider>
-      </Router>
-    );
+  it("Should be able render 22 products from api", async () => {
+    const { findAllByTestId } = render(<App />);
 
-    const container = getByTestId("home");
+    const cardProduct = await findAllByTestId("cardProduct");
 
-    expect(container).toBeDefined();
+    expect(cardProduct.length).toBe(22);
   });
 });
