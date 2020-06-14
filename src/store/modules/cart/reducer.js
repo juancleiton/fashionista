@@ -9,29 +9,29 @@ const INITIAL_STATE = {
   total: 0,
 };
 
+function isSameProduct(p, data) {
+  return (
+    p.size === data.size &&
+    p.sizes.sku === data.sizes.sku &&
+    p.code_color === data.code_color
+  );
+}
+
 export default function cart(state = INITIAL_STATE, action) {
   return produce(state, (draft) => {
     switch (action.type) {
       case "@cart/ADD_TO_CART": {
         const { data } = action.payload;
 
-        const productExists = state.cart.find(
-          (p) =>
-            p.size === data.size &&
-            p.sizes.sku === data.sizes.sku &&
-            p.code_color === data.code_color
-        );
+        const productExists = state.cart.find((p) => isSameProduct(p, data));
 
         const currentAmount = productExists ? productExists.amount : 0;
 
         const amount = currentAmount + 1;
 
         if (productExists) {
-          const productIndex = draft.cart.findIndex(
-            (p) =>
-              p.size === data.size &&
-              p.sizes.sku === data.sizes.sku &&
-              p.code_color === data.code_color
+          const productIndex = draft.cart.findIndex((p) =>
+            isSameProduct(p, data)
           );
 
           if (productIndex >= 0) {
@@ -49,11 +49,8 @@ export default function cart(state = INITIAL_STATE, action) {
       case "@cart/REMOVE_FROM_CART": {
         const { data } = action.payload;
 
-        const productIndex = draft.cart.findIndex(
-          (p) =>
-            p.size === data.size &&
-            p.sizes.sku === data.sizes.sku &&
-            p.code_color === data.code_color
+        const productIndex = draft.cart.findIndex((p) =>
+          isSameProduct(p, data)
         );
 
         if (productIndex >= 0) {
@@ -66,11 +63,8 @@ export default function cart(state = INITIAL_STATE, action) {
       case "@cart/UPDATE_AMOUNT": {
         const { data, amount } = action.payload;
 
-        const productIndex = draft.cart.findIndex(
-          (p) =>
-            p.size === data.size &&
-            p.sizes.sku === data.sizes.sku &&
-            p.code_color === data.code_color
+        const productIndex = draft.cart.findIndex((p) =>
+          isSameProduct(p, data)
         );
 
         if (productIndex >= 0 && amount >= 1) {
@@ -80,7 +74,7 @@ export default function cart(state = INITIAL_STATE, action) {
         break;
       }
 
-      case "@cart/SHOW_MODAL": {
+      case "SHOW_MODAL": {
         const { typeModal } = action.payload;
 
         draft.modal = !draft.modal;

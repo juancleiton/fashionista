@@ -118,7 +118,7 @@ export const CartEmpty = styled.div`
     height: 50px;
     width: 50px;
 
-    animation: ${appear} 1s;
+    animation: ${appear} 0.8s;
   }
 `;
 
