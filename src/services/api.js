@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://ifpb.github.io/challenges/web/front-end/js/amaro/code-response/data/products.json",
+  baseURL: "https://5f184aca7c06c900160dcd19.mockapi.io/api/v1/catalog",
 });
 
 export default api;
